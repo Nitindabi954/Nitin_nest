@@ -19,6 +19,7 @@ from nest.input_validator import input_validator
 from .address import Address
 from .id_generator import IdGen
 
+from nest.engine import tls
 logger = logging.getLogger(__name__)
 
 
@@ -518,3 +519,20 @@ class Node:
     def __repr__(self):
         classname = self.__class__.__name__
         return f"{classname}({self.name!r})"
+
+    def create_tls_client(self, server_ip: str):
+        """
+        Creating TLS client.
+
+        Parameters
+        ----------
+        server_ip: str
+            server ip address which we want to do handshake.
+        """
+        tls.create_tls_client(self.id, server_ip)
+
+    def create_tls_server(self):
+        """
+        Creating TLS server.
+        """
+        tls.create_tls_server(self.id)
