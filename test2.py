@@ -85,14 +85,21 @@ process.start()
 # as ARP) to be captured. Hence, we capture a maximum of 20 packets.
 with h1:
     print("Running tshark in h1 to capture TLS packets")
+    tshark_cmd = ['tshark', '-i', eth1.id, '-c 15', '-f', 'tcp port 443']
+    tshark_cmd2 = ['tshark', '-i', eth1.id, '-c 10']
     proc = subprocess.Popen(
-        ["tshark", "-i", eth1.id, '-c 20'],
+        tshark_cmd2,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     (stdout, _) = proc.communicate()
+    (_, stderr) = proc.communicate()
+
 
 # Output the details of the packets captured after process completes.
 process.join()
+if stderr:
+    print("tshark process produced the following error:")
+    print(stderr.decode())
 print(f"\nPackets captured at h1 by tshark (max: 20 packets):\n")
 print(stdout.decode())
